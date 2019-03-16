@@ -1,4 +1,5 @@
 <?php
+# Common1.php : コマンドライン引数と stop
 require '../Common.php';
 
 $n = Common\count_args();

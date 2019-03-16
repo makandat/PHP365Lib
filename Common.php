@@ -50,13 +50,14 @@ function args(int $n = -1) {
   }
 }
 
-# ログを出力する。logfile を省略すると syslog に出力する。
+# ログを出力する。logfile を省略すると STDOUT に出力する。
 function log_output(string $message, string $logfile = NULL) : void {
+  $now = strftime('%Y-%m-%d %T')." ";
   if (isset($logfile)) {
-    error_log($message, 3, $logfile);
+    error_log($now.$message."\n", 3, $logfile);
   }
   else {
-    error_log($message, 0);
+    error_log($now.$message."\n", 0);
   }
 }
 
@@ -89,19 +90,40 @@ function get_env(string $key) : string {
 }
 
 # OS が Windows かどうかを返す。
-function is_windows() : boolean {
-  return (var_dump(PHP_OS) == 'WINNT');
+function is_windows() : bool {
+  return (substr(PHP_OS, 0, 3) == 'WIN');
 }
 
 # エスケープシーケンス＋メッセージを表示する。esc は一部の色名称を使用できる。
 function esc_print(string $esc, string $message) {
-  print($esc . $message . ESC_NORMAL . "\n");
+  if ($esc == 'red') {
+    print(ESC_FG_RED . $message . ESC_NORMAL . "\n");
+  }
+  else if ($esc == 'green') {
+    print(ESC_FG_GREEN . $message . ESC_NORMAL . "\n");
+  }
+  else if ($esc == 'blue') {
+    print(ESC_FG_BLUE . $message . ESC_NORMAL . "\n");
+  }
+  else if ($esc == 'yellow') {
+    print(ESC_FG_YELLOW . $message . ESC_NORMAL . "\n");
+  }
+  else if ($esc == 'cyan') {
+    print(ESC_FG_CYAN . $message . ESC_NORMAL . "\n");
+  }
+  else if ($esc == 'magenta') {
+    print(ESC_FG_MAGENTA . $message . ESC_NORMAL . "\n");
+  }
+  else {
+    print($esc . $message . ESC_NORMAL . "\n");
+  }
 }
 
 # キーボードから1行読む。
 function readline(string $message = NULL) : string {
-  $line = readline($message);
-  readline_add_history($line);
+  print($message);
+  $line = trim(fgets(STDIN));
+  return $line;
 }
 
 ?>

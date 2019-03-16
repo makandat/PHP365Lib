@@ -1,28 +1,28 @@
 <?php
-namespace PHP365Lib;
 define("VERSION", "1.0.0");
 define("INIFILE", "AppConf.ini");
+define("UPLOADDIR", "/var/www/data");
 
 # Web ページクラス
 class WebPage {
-  protected $htm;    // HTML
-  public $v;       // 埋め込み変数のディクショナリ
+  protected $html;    // HTML
+  public $vars;       // 埋め込み変数のディクショナリ
   public $conf;    // コンフィギュレーション
 
   // コンストラクタ
   public function __construct(string $filePath) {
     if (isset($filePath))
-      $this->html = File::readAllText($filePath);
+      $this->html = readAllText($filePath);
     $this->vars = array();
     // INI ファイルを読んで $conf に格納する。
-    $inifile = Directory::getCurrentDirectory() . "/" . INIFILE;
+    $inifile = getcwd() . "/" . INIFILE;
     $this->conf = $this->readIniFile($inifile);
   }
 
   // HTML 文字列を返す。
   public function toString() : string {
     foreach (array_keys($this->v ) as $key) {
-       $this->htm = str_replace('(*'.$key.'*)', $this->v[$key], $this->htm);
+       $this->htm = str_replace('(*'.$key.'*)', $this->vars[$key], $this->html);
     }
     return $this->htm;
   }
@@ -33,13 +33,33 @@ class WebPage {
   }
 
   // パラメータがあれば true,　なければ false
-  public function isPostback() {
-    return (count($_POST) + count($_GET) > 0);
+  public function isPostback() : bool {
+    return (count($_REQUEST) > 0);
   }
 
-  // 生のヘッダーを送る。
-  public static function sendHttpHeader(string $header) : void {
-     header($header);
+  // プレイスホルダを得る。
+  public function getPlaceHolder(string $key) {
+    return $this->vars[$key];
+  }
+
+  // プレイスホルダを設定する。
+  public function setPlaceHolder(string $key, $value) {
+    $this->vars[$key] = $value;
+  }
+
+  // パラメータを得る。
+  public function getParam(string $key) {
+    return $_REQUEST[$key];
+  }
+
+  // クッキーを得る。
+  public function getCookie(string $key) {
+    return $_COOKIE[$key];
+  }
+
+  // クッキーを設定する。
+  public function setCookie(string $key, $value) {
+    $_COOKIE[$key] = $value;
   }
 
   // リダイレクト
@@ -47,21 +67,54 @@ class WebPage {
     header('Location: ' . $loc);
   }
 
-  // 画像ヘッダーを送る。
-  public static function sendImageHeader(string $img) {
+  // 画像を送る。
+  public static function sendImage(string $filePath) {
+     $img = getExtension($filePath);
      $img = strtolower($img);
-     if ($img == 'jpg')
+     if ($img == '.jpg')
        $img = 'jpeg';
+     else
+       $img = substr($img, 1);
      header("Content-Type: image/" . $img);
+     $buff = readBinary($filePath);
+     print $buff;
   }
 
   // INI ファイルを読む。
   public static function readIniFile(string $inifile) {
-    if (File::exists($inifile))
+    if (is_file($inifile))
       return parse_ini_file($inifile);
     else
       return false;
   }
+
+  // ファイルアップロード
+  public function fileUpload(string $key) : bool {
+    $uploadfile = UPLOADDIR . basename($_FILES[$key]['name']);
+    return move_uploaded_file($_FILES[$key]['tmp_name'], $uploadfile);
+  }
+
+  # テキストファイルを読んで内容を文字列として返す。
+  public static function readAllText(string $filePath) : string {
+    return file_get_contents($filePath);
+  }
+
+  # バイナリーファイルを読んで内容を文字列として返す。
+  public static function readBinary(string $fileName) : string {
+     $fp = foprn($fileName, "rb");
+     $buff = fread($fp, filesize($fileName));
+     fclose($fp);
+     return $buff;
+  }
+
+  public static function getExtension(string $path) : string {
+    $arr = pathinfo($path);
+    if (isset($arr['extension']))
+      return ".".$arr['extension'];
+    else
+      return "";
+  }
+
 }
 
 
