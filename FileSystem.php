@@ -1,17 +1,13 @@
 <?php
 namespace FileSystem;
 
-const VERSION = "1.0.0";
-const CONFIG = "AppConf.ini";
-
-
-//  ファイルの存在確認
+//  ファイル,ディレクトリの存在確認
 function exists(string $filePath): bool {
-  return is_file($filePath);
+  return file_exists($filePath);
 }
 
 // ファイルサイズを返す。
-static function getLength(string $filePath) : int {
+function getLength(string $filePath) : int {
   return filesize($filePath);
 }
 
@@ -21,9 +17,8 @@ function getMode(string $filePath) : string {
 }
 
 // ファイルモードを変更する。
-function setMode(string $filePath, string $mode) : void {
-  $m = sscanf("%o", $mode);
-  chmod($filePath, $m);
+function setMode(string $filePath, int $mode) : void {
+  chmod($filePath, $mode);
 }
 
 // パスがディレクトリなら true を返す。
@@ -81,7 +76,7 @@ function writeAllText(string $filePath, string $str) {
 
 
 // バイナリーデータをファイルから読む。
-function readBinary(string $filePath) string {
+function readBinary(string $filePath) : string {
   $fp = fopen($filePath, "rb");
   $content = fread($handle, filesize($filePath));
   fclose($fp);
@@ -89,7 +84,7 @@ function readBinary(string $filePath) string {
 }
 
 // バイナリーデータをファイルに書く。
-function writeBinary(string $filePath, string $data) void {
+function writeBinary(string $filePath, string $data) : void {
   $fp = fopen($filePath, "wb");
   fwrite($handle, $data);
   fclose($fp);
@@ -98,14 +93,14 @@ function writeBinary(string $filePath, string $data) void {
 
 
 // 文字列をファイルに追加する。
-function appendText(string $filePath, string $str)  {
+function appendText(string $filePath, string $str) : void  {
   $fp = fopen($filePath, "a");
   fputs($fp, $str);
   fclose($fp);
 }
 
 // 文字列の配列をファイルに書く。
-function writeAllLines(string $filePath, array $sa) {
+function writeAllLines(string $filePath, array $sa) : void {
   $fp = fopen($filePath, 'w');
   for ($i = 0; $i < count($sa); $i++) {
     fputs($sa[$i], $fp);

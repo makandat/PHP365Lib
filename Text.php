@@ -1,7 +1,5 @@
 <?php
 namespace Text;
-define("VERSION", "1.0.0");
-define("INIFILE", "AppConf.ini");
 
 # Text モジュール
 
@@ -137,8 +135,7 @@ function format(string $fmt, ...$vars) : string {
 
 # 引数を金額とし３桁おきにカンマを挿入した文字列を返す。
 function money(float $val) : string {
-  setlocale(LC_MONETARY, 'ja_JP');
-  return money_format("%n", $val);
+  return number_format($val);
 }
 
 # 文字列 text に部分文字列 pat が含まれていれば TRUE, そうでなければ FALSE を返す。

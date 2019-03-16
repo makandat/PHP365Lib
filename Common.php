@@ -126,4 +126,9 @@ function readline(string $message = NULL) : string {
   return $line;
 }
 
+# １行+改行を標準出力に出力する。
+function println($text) {
+  print($text . "\n");
+}
+
 ?>
