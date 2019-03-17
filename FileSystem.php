@@ -42,7 +42,7 @@ function getLastModified(string $filePath) : string {
 }
 
 // ファイルの所有者を得る。
-function getUserName(string $filePath) : string {
+function getOwnerName(string $filePath) : string {
   $a = posix_getpwuid(fileowner($filePath));
   return $a["name"];
 }
@@ -63,7 +63,8 @@ function readAllLines(string $filePath) : array {
   $sa = array();
   $fp = fopen($filePath, 'r');
   while (($s = fgets($fp)) != null) {
-    $sa.push($s);
+    $s = chop($s);
+    array_push($sa, $s);
   }
   fclose($fp);
   return $sa;
@@ -78,7 +79,7 @@ function writeAllText(string $filePath, string $str) {
 // バイナリーデータをファイルから読む。
 function readBinary(string $filePath) : string {
   $fp = fopen($filePath, "rb");
-  $content = fread($handle, filesize($filePath));
+  $content = fread($fp, filesize($filePath));
   fclose($fp);
   return $content;
 }
@@ -86,7 +87,7 @@ function readBinary(string $filePath) : string {
 // バイナリーデータをファイルに書く。
 function writeBinary(string $filePath, string $data) : void {
   $fp = fopen($filePath, "wb");
-  fwrite($handle, $data);
+  fwrite($fp, $data);
   fclose($fp);
 }
 

@@ -31,7 +31,7 @@ define("ESC_BG_WHITE", "\x1b[47m");
 
 # コマンドライン引数の数
 function count_args() : int {
-  return $_SERVER['argc'];
+  return ($_SERVER['argc'] - 1);
 }
 
 # コマンドライン引数を返す。n はコマンドライン引数の番号であるが、負の場合はコマンドライン引数配列全体を返す。
@@ -42,7 +42,7 @@ function args(int $n = -1) {
       return $argv;
     }
     else {
-      return $argv[$n];
+      return $argv[$n + 1];
     }
   }
   else {
