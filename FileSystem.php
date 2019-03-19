@@ -104,7 +104,7 @@ function appendText(string $filePath, string $str) : void  {
 function writeAllLines(string $filePath, array $sa) : void {
   $fp = fopen($filePath, 'w');
   for ($i = 0; $i < count($sa); $i++) {
-    fputs($sa[$i], $fp);
+    fputs($fp, $sa[$i]);
   }
   fclose($fp);
 }
@@ -142,17 +142,17 @@ function getDirectory(string $path) : string {
 }
 
 // ファイルを削除する。
-function delete(string $path) : bool {
+function fdelete(string $path) : bool {
   return unlink($path);
 }
 
 // ファイルを移動する。
-function move(string $srcpath, $destpath) : bool {
+function fmove(string $srcpath, $destpath) : bool {
   return rename($srcpath, $destpath);
 }
 
 // ファイルをコピーする。
-function copy(string $srcpath, $destpath) : bool {
+function fcopy(string $srcpath, $destpath) : bool {
   return copy($srcpath, $destpath);
 }
 
@@ -169,7 +169,7 @@ function getCurrentDirectory() : string {
 
 // 現在のディレクトリを変更する。
 function setCurrentDirectory(string $dirPath) : void {
-  chdir(dirPath);
+  chdir($dirPath);
 }
 
 // ディレクトリを作成する。
@@ -221,7 +221,7 @@ function getFiles($dirPath, string $filter = "", bool $full=false) : array {
        }
     }
     if ($full == false)
-      $f1 = File::getFileName($f);
+      $f1 = getFileName($f);
     else
       $f1 = $f;
     if ($n == 0 || ($n > 0 && $extmatch)) {
@@ -239,7 +239,7 @@ function getSubDirectories($dirPath, $full=false) : array {
     return $b;
   $a = glob($dirPath . "/*");
   foreach ($a as $f) {
-    if (Directory::exists($f) && ! ($f == "." || $f == "..")) {
+    if (exists($f) && ! ($f == "." || $f == "..")) {
       if ($full == false) {
         $ss = preg_split('/\//', $f);
         $f1 = $ss[count($ss) - 1];

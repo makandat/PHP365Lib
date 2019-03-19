@@ -1,7 +1,7 @@
 <?php
-# FileSystem2.php
+# FileSystem3.php
 require_once("../Common.php");
-Common\esc_print('cyan', 'FileSystem2.php');
+Common\esc_print('cyan', 'FileSystem3.php');
 require_once("../FileSystem.php");
 require_once("../Text.php");
 use FileSystem as fs;
@@ -11,7 +11,7 @@ if (Common\count_args() == 0) {
 }
 else {
   $testNo = Common\args(0);
-  Common\println(Common\count_args() . " " . $testNo);
+  Common\println("count_args=" . Common\count_args() . " testNo=" . $testNo);
 }
 
 $text1 = <<<EOS
@@ -31,7 +31,10 @@ if ($testNo == 1) {
   Common\esc_print('cyan', $str . "\n");
 }
 else if ($testNo == 2) {
-  # ァイルを読み込んで文字列の配列として返す。
+  # 文字列配列をファイルに書く。
+  $textlines = ['123456', '  ABCDEF', '===\\\\====&&&&'];
+  fs\writeAllLines($fileName1, $textlines);
+  # ファイルを読み込んで文字列の配列として返す。
   $lines = fs\readAllLines($fileName1);
   foreach ($lines as $line) {
     Common\println($line);

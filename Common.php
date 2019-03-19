@@ -97,25 +97,25 @@ function is_windows() : bool {
 # エスケープシーケンス＋メッセージを表示する。esc は一部の色名称を使用できる。
 function esc_print(string $esc, string $message) {
   if ($esc == 'red') {
-    print(ESC_FG_RED . $message . ESC_NORMAL . "\n");
+    print(ESC_FG_RED . $message . ESC_NORMAL);
   }
   else if ($esc == 'green') {
-    print(ESC_FG_GREEN . $message . ESC_NORMAL . "\n");
+    print(ESC_FG_GREEN . $message . ESC_NORMAL);
   }
   else if ($esc == 'blue') {
-    print(ESC_FG_BLUE . $message . ESC_NORMAL . "\n");
+    print(ESC_FG_BLUE . $message . ESC_NORMAL);
   }
   else if ($esc == 'yellow') {
-    print(ESC_FG_YELLOW . $message . ESC_NORMAL . "\n");
+    print(ESC_FG_YELLOW . $message . ESC_NORMAL);
   }
   else if ($esc == 'cyan') {
-    print(ESC_FG_CYAN . $message . ESC_NORMAL . "\n");
+    print(ESC_FG_CYAN . $message . ESC_NORMAL);
   }
   else if ($esc == 'magenta') {
-    print(ESC_FG_MAGENTA . $message . ESC_NORMAL . "\n");
+    print(ESC_FG_MAGENTA . $message . ESC_NORMAL);
   }
   else {
-    print($esc . $message . ESC_NORMAL . "\n");
+    print($esc . $message . ESC_NORMAL);
   }
 }
 
