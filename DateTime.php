@@ -1,21 +1,20 @@
 <?php
-namespace "PHP365Lib";
 
 # 日付時刻クラス
-class DateTime {
+class SDateTime {
   // Unix time
   private $unixtime;
   private $element;
   
   # コンストラクタ 
-  public constructor($str = NULL) {
-    if (isnull($str)) {
+  public function __construct($str = NULL) {
+    if (!isset($str)) {
       $this->unixtime = time();
     }
     else {
       $this->unixtime = strtotime($str);
     }
-    $element = getdate($this->unixtime);
+    $this->element = getdate($this->unixtime);
   }
 
   # 現在のUnixタイムスタンプを返す。
@@ -25,12 +24,12 @@ class DateTime {
 
   # この日付時刻オブジェクトの文字列表現
   public function toString() {
-    return strftime("%Y-m-%d %H:%M:%S", $this->unixtime);
+    return strftime("%Y-%m-%d %H:%M:%S", $this->unixtime);
   }
 
   # この日付時刻オブジェクトの日付だけの文字列表現
   public function toDateString() {
-    return strftime("%Y-m-%d", $this->unixtime);
+    return strftime("%Y-%m-%d", $this->unixtime);
   }
 
   # この日付時刻オブジェクトの時刻だけの文字列表現
@@ -40,37 +39,37 @@ class DateTime {
 
   # この日付時刻オブジェクトの日 (1..31)
   public function day() :int {
-    return $element['mday'];
+    return $this->element['mday'];
   }
 
   # この日付時刻オブジェクトの月 (1..12)
   public function month() : int {
-    return $element['mon'];
+    return $this->element['mon'];
   }
 
   # この日付時刻オブジェクトの年
   public function year() : int {
-    return $element['year'];
+    return $this->element['year'];
   }
 
   # この付時刻オブジェクトの曜日 (0..6)
   public function dayOfWeek() : int {
-    return $element['wday'];
+    return $this->element['wday'];
   }
 
   # この日付時刻オブジェクトの秒
   public function second() : int {
-    return $element['seconds'];
+    return $this->element['seconds'];
   }
 
   # この日付時刻オブジェクトの分
   public function minute() : int {
-    return $element['minutes'];
+    return $this->element['minutes'];
   }
 
   # この日付時刻オブジェクトの時
   public function hour() : int {
-    return $element['hours'];
+    return $this->element['hours'];
   }
 
   # この日付時刻オブジェクトに日を加算する。
@@ -83,7 +82,7 @@ class DateTime {
 
   # この日付時刻オブジェクトに秒を加算する。
   public function addSecond(int $seconds) : void {
-    $interval = new DateInterval('P'.$seconds.'S');
+    $interval = new DateInterval('PT'.$seconds.'S');
     $dt = new DateTime($this->toString());
     $dt->add($interval);
     $this->unixtime = $dt->getTimestamp();

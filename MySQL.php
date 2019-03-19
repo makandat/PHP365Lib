@@ -1,6 +1,5 @@
 <?php
-define("VERSION", "1.0.0");
-define("INIFILE", "AppConf.ini");
+define("CONFIG", "AppConf.ini");
 
 # MySQL クラス
 class MySQL {
@@ -15,7 +14,7 @@ class MySQL {
   public $mysqli;
 
   // コンストラクタ
-  public function __construct(string $inifile=INIFILE) {
+  public function __construct(string $inifile=CONFIG) {
     // INI ファイルを解析して接続情報を読む。
     $coninfo = parse_ini_file($inifile);
     if (isset($coninfo['host']))
@@ -63,11 +62,18 @@ class MySQL {
   }
 
   // SELECT クエリーを行う。
-  public function query(string $sql) : array {
+  public function query(string $sql, $assoc=TRUE) : array {
     $result = array();
     if ($q = $this->mysqli->query($sql)) {
-      while ($row = $q->fetch_assoc()) {
-        array_push($result, $row);
+      if ($assoc) {
+        while ($row = $q->fetch_assoc()) {
+          array_push($result, $row);
+        }
+      }
+      else {
+        while ($row = $q->fetch_array()) {
+          array_push($result, $row);
+        }
       }
       $q->close();
     }
@@ -76,13 +82,11 @@ class MySQL {
 
   // １つの値を返す SELECT クエリーを行う。
   public function getValue(string $sql) {
-    $dt = $this->query($sql);
-
-    if (count($dt) > 0) {
-      $row = $dt[0];
+    $result = NULL;
+    if ($q = $this->mysqli->query($sql)) {
+      $row = $q->fetch_array();
       $result = $row[0];
     }
-
     return $result;
   }
 
