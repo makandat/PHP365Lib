@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8"/>
+ <title>(*title*)</title>
+ <link rel="stylesheet" href="style.css" />
+ <script src="/js/jquery.min.js"></script>
+ <script>
+  $(function() {
+    $('#query').click(function() {
+       var cent = $('#cent').val();
+       $.getJSON('/php7/test/AJAX2.php',
+         {"cent":cent},
+         function(data) {
+            $('#message').text(data['inch'] + " in");
+         });
+     });
+  });
+ </script>
+</head>
+
+<body>
+<h1>(*title*)</h1>
+<hr />
+<div class="menu_bar"><a href="/">HOME</a></div>
+<br />
+
+<form style="margin-left:15%;">
+<div class="form_row"><label>センチ　<input type="text" id="cent" size="20" value="2.54" /></label></div>
+<div class="form_row"><input id="query" type="button" value="変換する" /></div>
+</form>
+<br />
+<div id="message" class="message"></div>
+
+</body>
+</html>
+  
