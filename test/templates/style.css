@@ -45,3 +45,11 @@ a:link, a:visited {
   text-decoration: none;
 }
 
+table, td, th {
+  border: solid thin gray;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: gainsboro;
+}

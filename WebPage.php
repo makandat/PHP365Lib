@@ -11,15 +11,23 @@ class WebPage {
   protected $headers;  // ヘッダー
 
   // コンストラクタ
-  public function __construct(string $filePath) {
-    if (isset($filePath)) {
+  public function __construct(string $filePath = '') {
+    if (is_file($filePath)) {
       $this->html = WebPage::readAllText($filePath);
-      $this->headers = array('Content-Type: text/html; charset=utf-8');
     }
+    else {
+      $this->html = "";
+    }
+    $this->headers = array('Content-Type: text/html; charset=utf-8');
     $this->vars = array();
     // INI ファイルを読んで $conf に格納する。
     $inifile = getcwd() . "/" . APPCONF;
-    $this->conf = $this->readIniFile($inifile);
+    if (is_file($inifile)) {
+      $this->conf = $this->readIniFile($inifile);
+    }
+    else {
+      $this->conf = array();
+    }
   }
 
   // HTML 文字列を返す。
@@ -130,7 +138,7 @@ class WebPage {
     return UPLOADDIR;
   }
 
-  // 画像を送る。
+  // 画像を送る。(jpeg, png, gif)
   public static function sendImage(string $filePath) {
      $img = WebPage::getExtension($filePath);
      $img = strtolower($img);
@@ -139,13 +147,7 @@ class WebPage {
      else
        $img = substr($img, 1);
      header("Content-Type: image/" . $img);
-     if ($img == 'svg') {
-       $buff = WebPage::readAllText($filePath);
-     }
-     else {
-       $buff = WebPage::readBinary($filePath);
-     }
-     print $buff;
+     readfile($filePath);
   }
 
   // テキストを送る。
@@ -157,8 +159,9 @@ class WebPage {
   // テキストファイルを送る。
   public static function sendTextFile(string $filePath) {
      header("Content-Type: text/plain");
-     $text = WebPage::readAllText($filePath);
-     print $text;
+     // $text = WebPage::readAllText($filePath);
+     // print $text;
+     readfile($filePath);
   }
 
   // JSON 文字列を送る。
@@ -187,7 +190,7 @@ class WebPage {
 
   # バイナリーファイルを読んで内容を文字列として返す。
   public static function readBinary(string $fileName) : string {
-     $fp = foprn($fileName, "rb");
+     $fp = fopen($fileName, "rb");
      $buff = fread($fp, filesize($fileName));
      fclose($fp);
      return $buff;
@@ -209,7 +212,7 @@ class WebPage {
       error_log($now.$message."\n", 3, $logfile);
     }
     else {
-      error_log($now.$message."\n", 0);
+      error_log($now.$message."\n", 3, PHPLOG);
     }
   }
 
@@ -302,7 +305,7 @@ class WebPage {
       $s .= "</tr>\n";
       $i += 1;
     }
-    $s .= "<table>\n";
+    $s .= "</table>\n";
     return $s;
   }
 
