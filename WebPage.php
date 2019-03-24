@@ -59,6 +59,11 @@ class WebPage {
     $this->vars[$key] = $value;
   }
 
+  // パラメータがあるかどうかを返す。
+  public function isParam(string $key) : bool {
+    return array_key_exists($key, $_REQUEST);
+  }
+  
   // パラメータを得る。
   public function getParam(string $key) {
     $value = "";
