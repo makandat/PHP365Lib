@@ -1,4 +1,5 @@
 <?php
+#  FileSystem.php Version 1.02  2019-03-25
 namespace FileSystem;
 
 //  ファイル,ディレクトリの存在確認
@@ -24,6 +25,11 @@ function setMode(string $filePath, int $mode) : void {
 // パスがディレクトリなら true を返す。
 function isDirectory(string $filePath) : bool {
   return is_dir($filePath);
+}
+
+// パスがファイルなら true を返す。
+function isFile(string $filePath) : bool {
+  return is_file($filePath);
 }
 
 // パスがシンボリックリンクなら true を返す。
@@ -239,7 +245,7 @@ function getSubDirectories($dirPath, $full=false) : array {
     return $b;
   $a = glob($dirPath . "/*");
   foreach ($a as $f) {
-    if (exists($f) && ! ($f == "." || $f == "..")) {
+    if (is_dir($f) && ! ($f == "." || $f == "..")) {
       if ($full == false) {
         $ss = preg_split('/\//', $f);
         $f1 = $ss[count($ss) - 1];

@@ -1,4 +1,5 @@
 <?php
+#   Text.php Version 1.00  2019-03-25
 namespace Text;
 
 # Text モジュール

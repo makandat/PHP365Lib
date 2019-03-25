@@ -1,4 +1,5 @@
 <?php
+#  WebPage.php  Version 1.01  2019-03-25
 define("APPCONF", "AppConf.ini");
 define("UPLOADDIR", "/var/www/data");
 define("PHPLOG", "/var/www/data/PHPWebPage.log");
@@ -71,6 +72,11 @@ class WebPage {
       $value = $_REQUEST[$key];
     }
     return $value;
+  }
+
+  // 構成ファイルの情報を得る。
+  public function getConf(string $key) {
+    return $this->conf[$key];
   }
 
   // チェックボックスがチェックされているかを返す。
