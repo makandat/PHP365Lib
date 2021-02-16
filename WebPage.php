@@ -1,8 +1,15 @@
 <?php
 #  WebPage.php  Version 1.01  2019-03-25
+#  WebPage.php  Version 1.10  2021-02-16  Windows 対応
 define("APPCONF", "AppConf.ini");
-define("UPLOADDIR", "/var/www/data");
-define("PHPLOG", "/var/www/data/PHPWebPage.log");
+if (substr(PHP_OS, 0, 3) == 'WIN') {
+  define("UPLOADDIR", "C:/temp");
+  define("PHPLOG", "C:/Apache24/logs/PHPWebPage.log");
+}
+else {
+  define("UPLOADDIR", "/var/www/data");
+  define("PHPLOG", "/var/www/data/PHPWebPage.log");
+}
 
 # Web ページクラス
 class WebPage {
@@ -64,7 +71,7 @@ class WebPage {
   public function isParam(string $key) : bool {
     return array_key_exists($key, $_REQUEST);
   }
-  
+
   // パラメータを得る。
   public function getParam(string $key) {
     $value = "";
@@ -88,7 +95,7 @@ class WebPage {
   public function isCookie(string $key) : bool {
     return array_key_exists($key, $_COOKIE);
   }
-  
+
   // クッキーを得る。
   public function getCookie(string $key) {
     $value = "";
@@ -127,8 +134,10 @@ class WebPage {
 
   // INI ファイルを読む。
   public static function readIniFile(string $inifile) {
-    if (is_file($inifile))
-      return parse_ini_file($inifile);
+    if (is_file($inifile)) {
+      $ret = parse_ini_file($inifile);
+      return $ret;
+    }
     else
       return false;
   }
@@ -228,7 +237,13 @@ class WebPage {
   }
 
 
-
+  # OS が Windows かどうかを判別
+  public static function isWindows() {
+    $b = FALSE;
+    if (substr(PHP_OS, 0, 3) == 'WIN')
+      $b = TRUE;
+    return $b;
+  }
 
 
 

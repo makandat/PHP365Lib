@@ -1,5 +1,6 @@
 <?php
 #  FileSystem.php Version 1.02  2019-03-25
+#  FileSystem.php Version 1.10  2021-02-16  Windows 対応
 namespace FileSystem;
 
 //  ファイル,ディレクトリの存在確認
@@ -49,13 +50,19 @@ function getLastModified(string $filePath) : string {
 
 // ファイルの所有者を得る。
 function getOwnerName(string $filePath) : string {
-  $a = posix_getpwuid(fileowner($filePath));
+  $a = array("name"=>"undef");
+  if (substr(PHP_OS, 0, 3) != 'WIN') {
+    $a = posix_getpwuid(fileowner($filePath));
+  }
   return $a["name"];
 }
 
 // ファイルの所有者グループを得る。
 function getGroupName(string $filePath) : string {
-  $a = posix_getgrgid(filegroup($filePath));
+  $a = array("name"=>"undef");
+  if (substr(PHP_OS, 0, 3) != 'WIN') {
+    $a = posix_getgrgid(filegroup($filePath));
+  }
   return $a["name"];
 }
 
